@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intelligent Exam Proctoring — Jad Chebly</title>
+<meta name="description" content="A computer-vision pipeline that watches classroom exam footage for phones, laptops and peer-to-peer chatting, built on YOLO11 with tiled inference, pose tracking and a Flask front-end.">
+<meta name="theme-color" content="#0b1220">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2334d399'/><text y='.9em' x='50%25' text-anchor='middle' font-size='58' font-family='monospace' font-weight='700' fill='%23052e23'>jc</text></svg>">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark" aria-hidden="true">jc</span>
+      <span>Jad Chebly</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="../index.html#work" class="is-active">Work</a>
+      <a href="../index.html#about" class="nav-hide-sm">About</a>
+      <a href="../index.html#contact">Contact</a>
+      <a href="https://github.com/jadchebly" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/jad-chebly-82ba051b3" class="nav-hide-sm" rel="noopener">LinkedIn</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="project-hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html#work">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      All work
+    </a>
+
+    <p class="eyebrow"><span class="dot" aria-hidden="true"></span> Computer vision — 2026</p>
+    <h1>Intelligent Exam Proctoring</h1>
+    <p class="lede">
+      A pipeline that reads classroom exam footage and looks for three things: a phone, a laptop,
+      and two people talking to each other. It produces a timestamped event log, an annotated video,
+      and a web interface a non-engineer can actually operate.
+    </p>
+
+    <p><a class="btn btn-ghost" href="https://github.com/jadchebly/AntiCheatingCV" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.3-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.82 1.18 1.85 1.18 3.11 0 4.43-2.69 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+      Source on GitHub
+    </a></p>
+
+    <dl class="facts">
+      <div class="fact"><dt>Context</dt><dd>Computer Vision group project</dd></div>
+      <div class="fact"><dt>Detection</dt><dd>YOLO11l with tiled inference</dd></div>
+      <div class="fact"><dt>Tracking</dt><dd>YOLO11m-pose with ByteTrack</dd></div>
+      <div class="fact"><dt>Interface</dt><dd>Flask app over the same pipeline</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="project-body">
+  <div class="wrap">
+
+    <div class="note">
+      <p>
+        Faces in every frame below are blurred. The footage was filmed with classmates for the
+        assignment, and none of them signed up to appear on a public portfolio.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>What it watches for</h2>
+      <p>
+        A classroom camera sees a wide, shallow scene: rows of desks, people mostly looking down,
+        and the objects that matter measuring a few dozen pixels across. Three violation subtypes
+        are tracked, and each needs a different kind of evidence.
+      </p>
+      <ul>
+        <li><strong>Phones and laptops</strong> are object detection, but small and often partly occluded by a hand or a desk edge.</li>
+        <li><strong>Chatting</strong> is not an object at all. There is nothing to detect, only a geometric relationship between two people that has to hold over time.</li>
+      </ul>
+
+      <div class="shots">
+        <figure class="shot">
+          <img src="../assets/img/proctoring-detection.jpg" alt="Annotated exam footage: every person has a tracking box and a persistent id, one phone is boxed and labelled with a confidence score, and a banner lists the currently active violation types" loading="lazy" width="1500" height="844">
+          <figcaption>
+            Annotated output. Every person carries a persistent track id, the detected phone is
+            boxed with its confidence, and the banner top-left lists which violation types are
+            active at that instant.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>How the pipeline is built</h2>
+      <p>
+        The frame loop runs at a stride rather than on every frame, and splits into two branches
+        that rejoin at the aggregator.
+      </p>
+      <pre><code>video file
+    │
+    ▼  frame loop (stride N)
+    ├──────────────────────────┬───────────────────────────┐
+    ▼                          ▼                           │
+YOLO11l + tiled inference   YOLO11m-pose + ByteTrack       │
+(cell_phone, laptop)        (persistent person ids)        │
+    │                          │                           │
+    ▼                          ▼                           │
+SpatialFixtureFilter       chatting heuristic              │
+    │                     (proximity + mutual facing)      │
+    ▼                          │                           │
+wrist-aware                    │                           │
+device → person association    │                           │
+    └──────────────┬───────────┘                           │
+                   ▼                                       │
+            EventAggregator  ◄─────────────────────────────┘
+    (per-subtype min duration + gap tolerance)
+                   │
+                   ▼
+   events.csv  +  annotated.mp4  +  metrics.json</code></pre>
+
+      <h3>Tiled inference, because the objects are tiny</h3>
+      <p>
+        A phone in the back row is a handful of pixels in a 1080p frame, and a detector run on the
+        whole frame at once will miss it. Each frame is split into a 2&nbsp;×&nbsp;2 grid with 20%
+        overlap and run tile by tile, then merged with per-class non-maximum suppression. The
+        overlap exists so an object straddling a tile boundary is not cut in half by the split.
+      </p>
+
+      <h3>The filter that mattered most</h3>
+      <p>
+        The first working version produced sustained, confident alarms on desks with nobody near
+        them. The detector had locked onto <strong>desk grommets and power outlets</strong> — small
+        dark ovals that read convincingly as a phone to a model trained on everyday photographs.
+      </p>
+      <p>
+        The fix is a <code>SpatialFixtureFilter</code>. It clusters detections by pixel location
+        and, when a cluster keeps firing in the same spot beyond a lifetime threshold, marks that
+        location as furniture and suppresses it. A real phone moves. A grommet does not. That single
+        piece of reasoning removed an entire category of false alarm without touching the model.
+      </p>
+
+      <h3>Tying a device to a person</h3>
+      <p>
+        Detecting a phone is only half of an alert. Somebody has to be holding it. Association is
+        <strong>wrist-aware</strong>: pose keypoints give wrist positions, and the device is matched
+        to the tracked person whose wrist is nearest. Crucially this is a confidence boost rather
+        than a hard requirement, with a body-centre fallback, so a phone sitting openly on a desk is
+        still reported when the nearest hand drops out of frame for a moment.
+      </p>
+
+      <h3>Chatting as geometry</h3>
+      <p>
+        Two conditions have to hold at once. The pair must be close, measured in
+        <strong>shoulder widths</strong> rather than pixels so the threshold survives perspective
+        across the room. And both heads must be turned toward each other, measured by how far the
+        nose has slid along the shoulder axis. Requiring the geometry to persist across several
+        sampled frames is what separates a conversation from someone glancing sideways.
+      </p>
+
+      <div class="shots">
+        <figure class="shot">
+          <img src="../assets/img/proctoring-laptop.jpg" alt="A second annotated clip showing a laptop detection boxed in blue and a phone detection boxed in orange, with tracking boxes around every person in the room" loading="lazy" width="1500" height="844">
+          <figcaption>
+            A second clip, with a laptop and a phone detected in the same frame. Both device classes
+            come from the same detector pass.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>From detections to events</h2>
+      <p>
+        A raw detection stream is unusable as an alert log. It flickers, it gaps, and it would
+        produce hundreds of one-frame rows. The <code>EventAggregator</code> merges the stream into
+        intervals using a minimum duration and a gap tolerance tuned per subtype, so a phone that
+        disappears behind a hand for a moment stays one event instead of becoming three.
+      </p>
+      <p>
+        Everything that governs this lives in a single YAML config: model paths, the tile grid,
+        confidence and IoU thresholds, fixture-filter radius and lifetime, wrist distances, the
+        chatting geometry, and the per-subtype aggregation timing. Tuning never means editing code.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>An interface for whoever actually runs it</h2>
+      <p>
+        A command-line pipeline is fine for the person who wrote it and useless to everyone else.
+        The Flask front-end wraps the same code so a run can be configured, watched and read
+        without a terminal.
+      </p>
+
+      <div class="shots two">
+        <figure class="shot">
+          <img src="../assets/img/proctoring-ui.jpg" alt="The web interface: a clip picker with an upload option, and a settings panel with frame stride, compute device and toggles for annotated video, chatting detection and the static-fixture filter" loading="lazy" width="1500" height="1050">
+          <figcaption>
+            Pick a clip or upload one, then set frame stride and compute device. The chatting
+            heuristic and the fixture filter are toggles, which makes their effect easy to show.
+          </figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="../assets/img/proctoring-progress.jpg" alt="The interface during and after a run, showing a progress bar at one hundred percent and the raw pipeline log streaming underneath" loading="lazy" width="1500" height="1050">
+          <figcaption>
+            Progress streams live, and the raw pipeline log is shown rather than hidden. A run that
+            behaves oddly can be diagnosed from the same page.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="shots">
+        <figure class="shot">
+          <img src="../assets/img/proctoring-events.jpg" alt="The results view: a table of detected events with violation type, start, end, duration, person id and confidence, download links for the CSV, metrics and annotated video, and the annotated video player below" loading="lazy" width="1500" height="1050">
+          <figcaption>
+            The event table sits directly above the annotated video, and clicking a row jumps the
+            player to that moment. A screening toggle hides low-confidence and repeated detections,
+            so the raw output stays inspectable rather than being quietly discarded.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="note">
+        <p>
+          One detail I enjoyed: the launcher deliberately avoids port 5000. On macOS, Control Center
+          holds it for AirPlay Receiver, so a browser reaching it instead of Flask shows a blank page
+          and a confusing hour. If the chosen port is busy the launcher steps up to the next free one
+          and prints where it landed.
+        </p>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>How it is evaluated</h2>
+      <p>
+        Ground truth is stored as JSON intervals alongside each clip. A predicted event counts as a
+        match when its <strong>temporal IoU</strong> against a ground-truth interval clears a
+        threshold, and results are reported at three thresholds rather than one, so it is visible
+        how much a score depends on where the bar is set. Precision, recall and F1 are broken out
+        per subtype as well as overall, because the three violation types fail in different ways and
+        an aggregate number would hide that.
+      </p>
+    </div>
+
+    <div class="pager">
+      <a href="dropout-prediction.html"><span>Previous</span>Student Dropout Prediction</a>
+      <a class="next" href="lumatron.html"><span>Next</span>Lumatron</a>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>© <span id="year">2026</span> Jad Chebly — Madrid, Spain</p>
+    <div class="footer-links">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#about">About</a>
+      <a href="mailto:chebly.jad@gmail.com">Email</a>
+      <a href="https://github.com/jadchebly" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/jad-chebly-82ba051b3" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="../assets/js/main.js" defer></script>
+</body>
+</html>

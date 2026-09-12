@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenData Platform at Kurrant — Jad Chebly</title>
+<meta name="description" content="Software engineering internship at Kurrant: an orchestrator bake-off between Dagster and Airflow, then building the new open-data platform and shipping its first end-to-end production release.">
+<meta name="theme-color" content="#0b1220">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2334d399'/><text y='.9em' x='50%25' text-anchor='middle' font-size='58' font-family='monospace' font-weight='700' fill='%23052e23'>jc</text></svg>">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark" aria-hidden="true">jc</span>
+      <span>Jad Chebly</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="../index.html#work" class="is-active">Work</a>
+      <a href="../index.html#about" class="nav-hide-sm">About</a>
+      <a href="../index.html#contact">Contact</a>
+      <a href="https://github.com/jadchebly" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/jad-chebly-82ba051b3" class="nav-hide-sm" rel="noopener">LinkedIn</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="project-hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html#work">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      All work
+    </a>
+
+    <p class="eyebrow"><span class="dot" aria-hidden="true"></span> Internship — May to August 2026</p>
+    <h1>OpenData Platform at Kurrant</h1>
+    <p class="lede">
+      Public authorities need their street-lighting data delivered on a schedule, in a standard
+      shape, correctly. The platform that does it pulls from third-party asset-management systems,
+      normalises the output, stores it, and publishes to client SFTP servers without anyone
+      touching a button. I rebuilt it and shipped its first end-to-end production release.
+    </p>
+
+    <dl class="facts">
+      <div class="fact"><dt>Role</dt><dd>Software engineering intern</dd></div>
+      <div class="fact"><dt>Company</dt><dd>Kurrant, Madrid</dd></div>
+      <div class="fact"><dt>Stack</dt><dd>Airflow, Node.js, PostgreSQL, MongoDB, AWS S3, Docker</dd></div>
+      <div class="fact"><dt>Outcome</dt><dd>Became its own standalone repository</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="project-body">
+  <div class="wrap">
+
+    <div class="note">
+      <p>
+        This is commercial work on an internal platform. The screenshots below are the real thing,
+        running locally, with third-party provider names and account emails redacted. The source
+        code stays private.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>First, choose the orchestrator properly</h2>
+      <p>
+        The team needed a scheduler and had a preference to argue about. Rather than argue, I ran a
+        bake-off. I built working mocks in both <strong>Dagster</strong> and <strong>Airflow</strong>,
+        then ran a DAG-ordering feasibility study against the real dependency shapes the platform
+        would have to express.
+      </p>
+      <p>
+        Airflow won on the criteria that mattered here, and I implemented it in production. The value
+        of doing it this way was not the answer — it was that the decision came with evidence
+        attached, and nobody had to relitigate it three months later.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>Then build the platform</h2>
+      <ul>
+        <li><strong>The new OpenData platform</strong> — the user interface, the version-history interface, and the API scripts, integrated as Airflow DAGs with push to S3. It grew large enough to be split out into its own repository.</li>
+        <li><strong>SFTP publication</strong>, so finished datasets land on client servers on schedule without an operator in the loop.</li>
+        <li><strong>Legacy history migration</strong>, carrying the existing record forward rather than starting the history at the cutover.</li>
+        <li><strong>Timezone-aware scheduling</strong>, which sounds small until a daylight-saving change silently shifts every delivery by an hour.</li>
+        <li><strong>Data-correctness fixes across seven datasets</strong> — the unglamorous work that decides whether a public authority trusts the feed.</li>
+        <li><strong>GDPR export and erasure, and two-factor authentication</strong>, both requirements for handling this data in the EU.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h2>The platform</h2>
+      <div class="shots">
+        <figure class="shot">
+          <img src="../assets/img/opendata-datasets.jpg" alt="The platform's dataset list: seven datasets with their provider, cadence, generation and publication status, last and next run, and a grid of the ten most recent execution outcomes" loading="lazy" width="1500" height="940">
+          <figcaption>
+            Seven datasets, each with its cadence, its last and next generation, and a strip of the
+            ten most recent runs. Green is a success, red a failure. The operator sees the health of
+            the whole platform without opening anything.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="shots">
+        <figure class="shot">
+          <img src="../assets/img/opendata-logs.jpg" alt="Generation logs listing 61 executions, with one expanded to show the Airflow DAG run: sync, fetch from the provider API, write, and push to S3, ending in success" loading="lazy" width="1500" height="755">
+          <figcaption>
+            Sixty-one recorded executions, one expanded. The log is the DAG itself: sync, fetch from
+            the provider API using a token held as an Airflow Variable, write, then push to S3.
+            Every stage is timed, so a slow run is diagnosable after the fact rather than guessed at.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="shots two">
+        <figure class="shot">
+          <img src="../assets/img/opendata-users.jpg" alt="User administration: a form to create an account with a role, and a table of accounts with role, status, last login and actions" loading="lazy" width="1500" height="755">
+          <figcaption>
+            Account administration, which decides who can read and who can run and modify the DAGs.
+            Accounts are created by invitation with a role attached.
+          </figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="../assets/img/opendata-settings.jpg" alt="Account settings with profile fields, a change-password form, and a two-factor authentication card offering to configure a six-digit code from an authenticator app" loading="lazy" width="1500" height="755">
+          <figcaption>
+            Two-factor authentication, one of the things I shipped in the first production release.
+            The same screen carries GDPR data export and account erasure further down.
+          </figcaption>
+        </figure>
+      </div>
+
+      <p>
+        Once a dataset is configured, generation and publication are self-managing. That was the
+        point of the rebuild: the previous arrangement needed a person, and a person is exactly what
+        you do not have at three in the morning.
+      </p>
+    </div>
+
+    <div class="pager">
+      <a href="tiktok-recommender.html"><span>Previous</span>TikTok Recommender</a>
+      <a class="next" href="iestagram.html"><span>Next</span>IEstagram</a>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>© <span id="year">2026</span> Jad Chebly — Madrid, Spain</p>
+    <div class="footer-links">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#about">About</a>
+      <a href="mailto:chebly.jad@gmail.com">Email</a>
+      <a href="https://github.com/jadchebly" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/jad-chebly-82ba051b3" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="../assets/js/main.js" defer></script>
+</body>
+</html>

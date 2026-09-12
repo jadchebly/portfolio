@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Student Dropout Prediction — Jad Chebly</title>
+<meta name="description" content="An end-to-end supervised machine learning pipeline over 4,424 student records and 34 features, reaching 0.943 ROC-AUC on held-out data with SHAP explaining the drivers.">
+<meta name="theme-color" content="#0b1220">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2334d399'/><text y='.9em' x='50%25' text-anchor='middle' font-size='58' font-family='monospace' font-weight='700' fill='%23052e23'>jc</text></svg>">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark" aria-hidden="true">jc</span>
+      <span>Jad Chebly</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="../index.html#work" class="is-active">Work</a>
+      <a href="../index.html#about" class="nav-hide-sm">About</a>
+      <a href="../index.html#contact">Contact</a>
+      <a href="https://github.com/jadchebly" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/jad-chebly-82ba051b3" class="nav-hide-sm" rel="noopener">LinkedIn</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="project-hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html#work">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      All work
+    </a>
+
+    <p class="eyebrow"><span class="dot" aria-hidden="true"></span> Machine learning — May 2025</p>
+    <h1>Student Dropout Prediction</h1>
+    <p class="lede">
+      Given what a university knows about a student after two semesters, can it tell who is about to
+      leave — early enough to do something about it? An end-to-end supervised pipeline over 4,424
+      student records and 34 features, built to be explainable rather than just accurate.
+    </p>
+
+    <p><a class="btn btn-ghost" href="https://github.com/jadchebly/ML_FP" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.3-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.82 1.18 1.85 1.18 3.11 0 4.43-2.69 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+      Source on GitHub
+    </a></p>
+
+    <dl class="facts">
+      <div class="fact"><dt>Data</dt><dd>4,424 records, 34 features</dd></div>
+      <div class="fact"><dt>Task</dt><dd>Dropout vs. graduate, 3,630 students</dd></div>
+      <div class="fact"><dt>Final model</dt><dd>Tuned Gradient Boosting</dd></div>
+      <div class="fact"><dt>Held-out ROC-AUC</dt><dd>0.943</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="project-body">
+  <div class="wrap">
+
+    <div class="block">
+      <h2>The data, and the imbalance problem</h2>
+      <p>
+        Each record covers one student: demographics, parental education and occupation, application
+        route, scholarship and debtor status, tuition payment status, macroeconomic conditions at
+        enrolment, and — most importantly — curricular units enrolled, evaluated, approved and
+        graded across the first two semesters.
+      </p>
+      <p>
+        The outcome column has three values: 1,421 dropped out, 2,209 graduated, and 794 were still
+        enrolled at the time of the snapshot. Students still enrolled have no outcome yet, so the
+        classification task is built on the 3,630 resolved cases. That still leaves the classes
+        uneven, and a model that predicts “graduate” for everyone would score 61% accuracy while
+        being useless.
+      </p>
+      <ul>
+        <li><strong>ADASYN</strong> to synthesise minority-class examples in the regions where the classes actually overlap, plus class weights as a second line of defence.</li>
+        <li><strong>Feature selection</strong> through Random Forest importance and Boruta, rather than trusting a single ranking.</li>
+        <li><strong>Engineered features</strong> beyond the raw columns — a normalised fail ratio, progress change between semesters, academic engagement and low-grade flags — which turned out to be among the strongest signals in the final model.</li>
+      </ul>
+
+      <div class="shots">
+        <figure class="shot">
+          <img src="../assets/img/dropout-pca.jpg" alt="PCA projection scatter plot with dropout students in red concentrated on the left and graduates in blue concentrated in the lower centre and right" loading="lazy" width="1500" height="960">
+          <figcaption>
+            A two-component PCA projection. The classes separate but overlap heavily in the middle —
+            which is exactly where the interesting students are, and why accuracy alone is a poor
+            way to judge this model.
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Choosing a model</h2>
+      <p>
+        Three families were screened under the same evaluation harness before any tuning, scored on
+        macro F1 and on recall for the dropout class specifically — because the cost of missing a
+        student who leaves is not the same as the cost of a false alarm.
+      </p>
+
+      <div class="table-scroll">
+        <table>
+          <caption>Screening pass. Macro-averaged ROC-AUC across the two classes.</caption>
+          <thead>
+            <tr><th scope="col">Model</th><th scope="col">Macro F1</th><th scope="col">Recall (dropout)</th><th scope="col">ROC-AUC</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Logistic Regression (ADASYN)</td><td>0.839</td><td>0.814</td><td>0.936</td></tr>
+            <tr><td>Random Forest</td><td>0.879</td><td>0.808</td><td>0.946</td></tr>
+            <tr class="is-best"><td>Gradient Boosting</td><td>0.883</td><td>0.800</td><td>0.947</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Gradient Boosting went forward and was tuned by grid search. The Random Forest was tuned too
+        and reached a slightly higher validation ROC-AUC of 0.951, but the boosted model held its
+        advantage on the dropout class, which is the class the whole exercise exists to catch.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>Final performance on held-out data</h2>
+
+      <div class="table-scroll">
+        <table>
+          <caption>Tuned Gradient Boosting on the untouched test set, 545 students. Overall accuracy 0.892, macro F1 0.885, ROC-AUC 0.943.</caption>
+          <thead>
+            <tr><th scope="col">Class</th><th scope="col">Precision</th><th scope="col">Recall</th><th scope="col">F1</th><th scope="col">Support</th></tr>
+          </thead>
+          <tbody>
+            <tr class="is-best"><td>Dropout</td><td>0.893</td><td>0.934</td><td>0.913</td><td>332</td></tr>
+            <tr><td>Graduate</td><td>0.889</td><td>0.826</td><td>0.856</td><td>213</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        The model catches <strong>93.4% of students who go on to drop out</strong>, and when it raises
+        a flag it is right just under 90% of the time. For an intervention system that is the right
+        balance — the cost of a wrongly flagged student is a conversation, and the cost of a missed
+        one is a student who leaves.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>Why the model says what it says</h2>
+      <p>
+        A risk score a registrar cannot interrogate will not be used. SHAP values decompose each
+        prediction into per-feature contributions, so a flag comes with a reason attached.
+      </p>
+
+      <div class="shots">
+        <figure class="shot">
+          <img src="../assets/img/dropout-shap.jpg" alt="SHAP summary plot ranking features by impact on model output, led by curricular units approved in the first semester and the normalised fail ratio" loading="lazy" width="1500" height="900">
+          <figcaption>
+            SHAP summary. Each point is one student; colour is the feature's value and horizontal
+            position is its push on the prediction.
+          </figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="../assets/img/dropout-importance.jpg" alt="Horizontal bar chart of all feature importances, dominated by second-semester units approved and the normalised fail ratio" loading="lazy" width="1200" height="1900">
+          <figcaption>Feature importances across all 34 inputs, for comparison with the SHAP ranking.</figcaption>
+        </figure>
+      </div>
+
+      <p>
+        The two rankings agree, and the answer is blunt: <strong>coursework outcomes dominate</strong>.
+        Units approved and the fail ratio outweigh every demographic variable in the dataset. Two
+        non-academic features do break into the top tier — whether tuition fees are up to date, and
+        age at enrolment — and both are actionable in a way that a parental occupation code is not.
+      </p>
+
+      <div class="note">
+        <p>
+          That finding is the useful part. It says a university does not need sensitive background
+          data to run this: the signal is already sitting in the records it keeps anyway.
+        </p>
+      </div>
+    </div>
+
+    <div class="pager">
+      <a href="grade-tracker.html"><span>Previous</span>Grade &amp; What-If Tracker</a>
+      <a class="next" href="exam-proctoring.html"><span>Next</span>Intelligent Exam Proctoring</a>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>© <span id="year">2026</span> Jad Chebly — Madrid, Spain</p>
+    <div class="footer-links">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#about">About</a>
+      <a href="mailto:chebly.jad@gmail.com">Email</a>
+      <a href="https://github.com/jadchebly" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/jad-chebly-82ba051b3" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="../assets/js/main.js" defer></script>
+</body>
+</html>

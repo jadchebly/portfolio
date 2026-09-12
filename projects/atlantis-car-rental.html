@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlantis Car Rental — Jad Chebly</title>
+<meta name="description" content="A six-page Next.js site for a family car rental business in Anfeh, Lebanon, statically exported and deployed through a CI pipeline that blocks broken builds.">
+<meta name="theme-color" content="#0b1220">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2334d399'/><text y='.9em' x='50%25' text-anchor='middle' font-size='58' font-family='monospace' font-weight='700' fill='%23052e23'>jc</text></svg>">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark" aria-hidden="true">jc</span>
+      <span>Jad Chebly</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="../index.html#work" class="is-active">Work</a>
+      <a href="../index.html#about" class="nav-hide-sm">About</a>
+      <a href="../index.html#contact">Contact</a>
+      <a href="https://github.com/jadchebly" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/jad-chebly-82ba051b3" class="nav-hide-sm" rel="noopener">LinkedIn</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="project-hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html#work">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      All work
+    </a>
+
+    <p class="eyebrow"><span class="dot" aria-hidden="true"></span> Client work — 2026</p>
+    <h1>Atlantis Car Rental</h1>
+    <p class="lede">
+      A family runs a small fleet of SUVs in Anfeh, on the Lebanese coast. They had no website and
+      no way for a visitor to see what they actually rent. I built them one, and a deployment
+      pipeline to go with it.
+    </p>
+
+    <dl class="facts">
+      <div class="fact"><dt>Role</dt><dd>Sole developer and designer</dd></div>
+      <div class="fact"><dt>Stack</dt><dd>Next.js 16, TypeScript, Tailwind v4</dd></div>
+      <div class="fact"><dt>Hosting</dt><dd>Static export on Cloudflare Pages</dd></div>
+      <div class="fact"><dt>Status</dt><dd>Built and deploying</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="project-body">
+  <div class="wrap">
+
+    <div class="block">
+      <h2>Two constraints that shaped everything</h2>
+      <p>
+        Before writing a line, I asked the owners how they actually do business. Two answers
+        determined the whole design.
+      </p>
+      <ul>
+        <li><strong>No prices on the site.</strong> Rates move with the season and get quoted on the phone. A price table would have been wrong within a month.</li>
+        <li><strong>No online booking.</strong> Customers call to ask about availability, and the family wants that conversation. It is how they judge a renter.</li>
+      </ul>
+      <p>
+        So every call-to-action on the site leads to a phone number, a WhatsApp thread or an email.
+        The copy is written around that, and the codebase carries a note saying so, because the
+        fastest way to break this site is to bolt a booking form onto it later.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>The site</h2>
+      <p>
+        Six pages rather than one long scroll, so someone can be sent straight to the car they asked
+        about. Every vehicle gets its own page with make, model, year, colour and specs, generated
+        from a single data source.
+      </p>
+
+      <div class="shots">
+        <figure class="shot">
+          <img src="../assets/img/atlantis-home.jpg" alt="Home page: a headline reading Rent a car in Anfeh, the easy way, over a photograph of the Anfeh coastline, with call and see-our-cars buttons" loading="lazy" width="1440" height="1000">
+          <figcaption>The home page. A short doorway into the rest of the site, with the phone number as the primary action and a note that rates change with the season.</figcaption>
+        </figure>
+      </div>
+
+      <div class="shots two">
+        <figure class="shot">
+          <img src="../assets/img/atlantis-fleet.jpg" alt="Fleet page listing the available cars" loading="lazy" width="1440" height="1000">
+          <figcaption>The fleet index. Each card links to a full page for that car.</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="../assets/img/atlantis-about.jpg" alt="About page telling the family story behind the business" loading="lazy" width="1440" height="1000">
+          <figcaption>About. The family story, which is the actual reason people rent from them rather than a chain.</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="../assets/img/atlantis-how.jpg" alt="How it works page describing the three steps to rent a car" loading="lazy" width="1440" height="1000">
+          <figcaption>How it works — three steps, plus the things worth knowing before you call.</figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="../assets/img/atlantis-contact.jpg" alt="Contact page with phone, WhatsApp, email, Instagram and location" loading="lazy" width="1440" height="1000">
+          <figcaption>Contact. Phone, WhatsApp, email, Instagram and location, all one tap away.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Shipping it safely</h2>
+      <p>
+        The people who own this site are not engineers. If a deploy breaks it, nobody will notice
+        until the phone stops ringing. So the pipeline is built to fail loudly instead of publishing
+        quietly.
+      </p>
+      <ul>
+        <li><strong>On every push and pull request</strong>, the CI workflow installs dependencies exactly as locked, lints, typechecks, and builds the site both ways — as a server build and as a static export.</li>
+        <li><strong>It counts the pages.</strong> If the export produces fewer than ten, the build fails. That single check catches the whole class of routing mistakes that silently drop pages.</li>
+        <li><strong>Deployment is gated on that being green</strong>, and publishes to Cloudflare Pages when <code>main</code> changes.</li>
+      </ul>
+      <div class="note">
+        <p>
+          The site has no server code and no database, so the static export is an ordinary folder of
+          HTML. That was deliberate: it means the family is never locked to one host, and the
+          running cost is nothing.
+        </p>
+      </div>
+    </div>
+
+    <div class="pager">
+      <a href="lumatron.html"><span>Previous</span>Lumatron</a>
+      <a class="next" href="tiktok-recommender.html"><span>Next</span>TikTok Recommender</a>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>© <span id="year">2026</span> Jad Chebly — Madrid, Spain</p>
+    <div class="footer-links">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#about">About</a>
+      <a href="mailto:chebly.jad@gmail.com">Email</a>
+      <a href="https://github.com/jadchebly" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/jad-chebly-82ba051b3" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="../assets/js/main.js" defer></script>
+</body>
+</html>
